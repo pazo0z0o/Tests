@@ -164,6 +164,43 @@ namespace DatabaseConfigurations.Repositories
                 command.ExecuteNonQuery(); // number of rows affected should be 1
             }
         }
+        //Get all the Fields of the same form
+        public List<Fields>? GetByFormId(int ID)
+        {
+            List<Fields>? formFields = null;
 
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("SQLConnection")))
+            {
+                try
+                {
+                    connection.Open();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                SqlDataAdapter fieldsAdapter = new SqlDataAdapter();
+                SqlCommand command = new SqlCommand("Select * From Fields Where FormId=@Id", connection);
+                command.Parameters.AddWithValue("@Id", ID);
+                fieldsAdapter.SelectCommand = command;
+
+                DataTable fieldsTable = new DataTable("SameFormFields");
+                fieldsAdapter.Fill(fieldsTable);
+
+                if (fieldsTable.Rows.Count > 0)
+                {
+                    Fields field = new Fields();
+                    field.Id = Convert.ToInt32(fieldsTable.Rows[0]["Id"]);
+                    field.NoteName = Convert.ToString(fieldsTable.Rows[0]["NoteName"]);
+                    field.Note = Convert.ToString(fieldsTable.Rows[0]["Note"]);
+                    field.FormId = Convert.ToInt32(fieldsTable.Rows[0]["FormId"]);
+
+                    formFields.Add(field);
+                }
+                
+            }
+            return formFields;
+        }
     }
 }
