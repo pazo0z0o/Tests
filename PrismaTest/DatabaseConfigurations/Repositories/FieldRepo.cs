@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseConfigurations.Repositories
 {
-    public class FieldsRepo 
+    public class FieldsRepo : IEntityField<Fields>
     {
         private readonly IConfiguration _configuration;
         //injection
@@ -59,7 +59,7 @@ namespace DatabaseConfigurations.Repositories
                 SqlCommand command = new SqlCommand("Delete From Fields Where Id = @Id", connection);
                 command.Parameters.AddWithValue("@Id", ID);
                 command.ExecuteNonQuery();
-                int count =  (int)command.ExecuteNonQuery();
+                int count = (int)command.ExecuteNonQuery();
                 if (count == 0)
                 {
                     throw new Exception("FormId does not exist in Forms table");
@@ -155,7 +155,7 @@ namespace DatabaseConfigurations.Repositories
                 }
                 SqlCommand command = new SqlCommand(
                     "Update Fields Set NoteName = @NoteName, Note = @Note, FormId = @FormId " +
-                    "Where Id = @Id", connection);
+                    "Where Id = @id", connection);
                 command.Parameters.AddWithValue("@Id", entity.Id);
                 command.Parameters.AddWithValue("@NoteName", entity.NoteName);
                 command.Parameters.AddWithValue("@Note", entity.Note);
@@ -165,9 +165,9 @@ namespace DatabaseConfigurations.Repositories
             }
         }
         //Get all the Fields of the same form
-        public List<Fields>? GetByFormId(int ID)
+        public IList<Fields>? GetByFormId(int ID)
         {
-            List<Fields>? formFields = null;
+            List<Fields>? formFields = new();
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SQLConnection")))
             {
                 try
@@ -192,17 +192,39 @@ namespace DatabaseConfigurations.Repositories
                     for (int i = 0; i < fieldsTable.Rows.Count; i++)
                     {
                         Fields field = new Fields();
-                        field.Id = Convert.ToInt32(fieldsTable.Rows[0]["Id"]);
-                        field.NoteName = Convert.ToString(fieldsTable.Rows[0]["NoteName"]);
-                        field.Note = Convert.ToString(fieldsTable.Rows[0]["Note"]);
-                        field.FormId = Convert.ToInt32(fieldsTable.Rows[0]["FormId"]);
+                        field.Id = Convert.ToInt32(fieldsTable.Rows[i]["Id"]);
+                        field.NoteName = Convert.ToString(fieldsTable.Rows[i]["NoteName"]);
+                        field.Note = fieldsTable.Rows[i]["Note"].ToString();
+                        try
+                        {
+                            if (IsNumeric(fieldsTable.Rows[i]["Note"].ToString()))
+                            {
+                                field.Note = fieldsTable.Rows[i]["Note"].ToString();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw ex;
+                        }
+
+
+                        
+                        field.FormId = Convert.ToInt32(fieldsTable.Rows[i]["FormId"]);
 
                         formFields.Add(field);
                     }
                 }
-                
+
             }
             return formFields;
         }
+
+        //Validator for numeric
+        public bool IsNumeric(string noteValue)
+        {
+            int result;
+            return int.TryParse(noteValue, out result);
+        }
+
     }
 }
