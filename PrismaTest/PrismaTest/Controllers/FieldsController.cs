@@ -22,8 +22,8 @@ namespace PrismaTest.Controllers
         // I think that calling the fields through their selected formId is appropriate
         //GetAll seems unneccessary here
 
-        // GET api/fields/id
-        [HttpGet("{id}")]
+        // GET fields/id
+        [HttpGet("/fields/{id:int}")]
         public async Task<ActionResult<List<Fields>>> Get(int formid)
         {
             try
@@ -41,8 +41,8 @@ namespace PrismaTest.Controllers
             }
         }
 
-        // POST api/fields/create
-        [HttpPost]
+        // POST /fields/create
+        [HttpPost("/fields/create")]
         public async Task<IActionResult> PostAsync( Fields field, int formId)
         {
             try
@@ -57,7 +57,7 @@ namespace PrismaTest.Controllers
         }
 
         // PUT api/fields/create/id
-        [HttpPut("{id}")]
+        [HttpPut("/fields/create/{id:int}")]
         public async Task<IActionResult> PutAsync(int id, [FromBody] Fields fields)
         {
             try
@@ -78,7 +78,7 @@ namespace PrismaTest.Controllers
         }
 
         // DELETE api/fields/id
-        [HttpDelete("{id}")]
+        [HttpDelete("/fields/{id:int}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             try

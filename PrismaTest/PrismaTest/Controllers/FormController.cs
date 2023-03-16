@@ -12,20 +12,20 @@ namespace PrismaTest.Controllers
     {
         private readonly IEntityRepo<Forms> _formsRepo;
         //injection
-        public FormController( IEntityRepo<Forms> form)
+        public FormController(IEntityRepo<Forms> form)
         {
             _formsRepo = form;
-           
+
         }
 
-        [HttpGet]
+        [HttpGet("/forms/formlist")]
         public async Task<ActionResult<IEnumerable<Forms>>> GetAllForms()
         {
             var forms = await Task.Run(() => _formsRepo.GetAll());
             return Ok(forms);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/forms/{id:int}")]
         public async Task<ActionResult<Forms>> GetFormById(int id)
         {
             var form = await Task.Run(() => _formsRepo.GetById(id));
@@ -36,7 +36,7 @@ namespace PrismaTest.Controllers
             return Ok(form);
         }
 
-        [HttpPost]
+        [HttpPost("/forms/create/")]
         public async Task<IActionResult> CreateForm([FromBody] Forms form)
         {
             if (form == null)
@@ -48,7 +48,7 @@ namespace PrismaTest.Controllers
             return CreatedAtAction(nameof(GetFormById), new { id = form.Id }, form);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("/forms/create/{id:int}")]
         public async Task<IActionResult> UpdateForm(int id, [FromBody] Forms form)
         {
             if (form == null || id != form.Id)
@@ -66,7 +66,7 @@ namespace PrismaTest.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("/forms/{id:int}")]
         public async Task<IActionResult> DeleteForm(int id)
         {
             var existingForm = await Task.Run(() => _formsRepo.GetById(id));
