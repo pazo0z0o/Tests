@@ -36,7 +36,6 @@ namespace DatabaseConfigurations.Repositories
                 SqlCommand command = new SqlCommand(
                     "Insert Into Forms(Title,Description,DateOfCreation,LastUpdated)" +
                     "Values(@title,@Description,@DateOfCreation,@LastUpdated)", connection);
-                formAdapter.InsertCommand = command; //I am unsure about how I would use the adapter here tbh
 
                 command.Parameters.AddWithValue("@Title", entity.Title);
                 command.Parameters.AddWithValue("@Description", entity.Description);
@@ -154,8 +153,6 @@ namespace DatabaseConfigurations.Repositories
                 {
                     throw ex;
                 }
-                //created adapter and command to pass to the adapter
-                SqlDataAdapter formAdapter = new SqlDataAdapter();
                 SqlCommand command = new SqlCommand(
                     "UPDATE Forms SET Title=@Title, Description=@Description, " +
                     "DateOfCreation=@DateOfCreation, LastUpdated=@LastUpdated " +
