@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 namespace PrismaTest.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class FormController : ControllerBase
     {
@@ -21,37 +21,64 @@ namespace PrismaTest.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Forms>> GetAll()
+        public async Task<ActionResult<IEnumerable<Forms>>> GetAllForms()
         {
-            var result = _formsRepo.GetAll();
-
-            return result.Select(form => new Forms
-            {
-                Id = form.Id,
-                Title = form.Title,
-                Description = form.Description,
-                DateOfCreation = form.DateOfCreation,
-                LastUpdated = form.LastUpdated,
-
-                Fields = form.Fields.Select(field => new Fields
-                {
-                    Id = field.Id,
-                    NoteName = field.NoteName,
-                    Note = field.Note,
-                }).ToList()
-            });
+            var forms = await Task.Run(() => _formsRepo.GetAll());
+            return Ok(forms);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<Forms> GetById(int id) 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Forms>> GetFormById(int id)
         {
-            var result = _formsRepo.GetById(id);
+            var form = await Task.Run(() => _formsRepo.GetById(id));
+            if (form == null)
+            {
+                return NotFound();
+            }
+            return Ok(form);
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateForm([FromBody] Forms form)
+        {
+            if (form == null)
+            {
+                return BadRequest();
+            }
 
+            await Task.Run(() => _formsRepo.Add(form));
+            return CreatedAtAction(nameof(GetFormById), new { id = form.Id }, form);
+        }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateForm(int id, [FromBody] Forms form)
+        {
+            if (form == null || id != form.Id)
+            {
+                return BadRequest();
+            }
 
+            var existingForm = await Task.Run(() => _formsRepo.GetById(id));
+            if (existingForm == null)
+            {
+                return NotFound();
+            }
 
-            return result;
+            await Task.Run(() => _formsRepo.Update(id, form));
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteForm(int id)
+        {
+            var existingForm = await Task.Run(() => _formsRepo.GetById(id));
+            if (existingForm == null)
+            {
+                return NotFound();
+            }
+
+            await Task.Run(() => _formsRepo.Delete(id));
+            return NoContent();
         }
     }
 }
