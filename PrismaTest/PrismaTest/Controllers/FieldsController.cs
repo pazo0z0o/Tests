@@ -41,7 +41,7 @@ namespace PrismaTest.Controllers
             }
         }
 
-        // POST api/fields
+        // POST api/fields/create
         [HttpPost]
         public async Task<IActionResult> PostAsync( Fields field, int formId)
         {
@@ -56,7 +56,7 @@ namespace PrismaTest.Controllers
             }
         }
 
-        // PUT api/fields/5
+        // PUT api/fields/create/id
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync(int id, [FromBody] Fields fields)
         {
@@ -77,7 +77,7 @@ namespace PrismaTest.Controllers
             }
         }
 
-        // DELETE api/fields/5
+        // DELETE api/fields/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
