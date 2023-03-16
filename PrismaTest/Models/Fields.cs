@@ -12,7 +12,7 @@ namespace Models
         //has foreign key of FormId in this 1-M relationship
         public int Id { get; set; }
         public string NoteName { get; set; }
-        public string Note { get; set; }  //Must only be numeric -- will fix with regex later 
+        public int Note { get; set; }  //Must only be numeric -- will fix with regex later 
 
         //relationship
         public int FormId { get; set; }
@@ -25,7 +25,7 @@ namespace Models
 
         }
 
-        public Fields( string field, string noteName)
+        public Fields( int field, string noteName)
         {
             Note = field;
             NoteName = noteName;

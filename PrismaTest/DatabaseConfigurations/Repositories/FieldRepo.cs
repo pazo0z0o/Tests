@@ -97,7 +97,7 @@ namespace DatabaseConfigurations.Repositories
                         Fields field = new Fields();
                         field.Id = Convert.ToInt32(fieldsTable.Rows[i]["Id"]);
                         field.NoteName = Convert.ToString(fieldsTable.Rows[i]["NoteName"]);
-                        field.Note = Convert.ToInt32(fieldsTable.Rows[i]["Note"]).ToString();
+                        field.Note = Convert.ToInt32(fieldsTable.Rows[i]["Note"]);
                         field.FormId = Convert.ToInt32(fieldsTable.Rows[i]["FormId"]);
 
                         fieldsList.Add(field);
@@ -135,7 +135,7 @@ namespace DatabaseConfigurations.Repositories
                     field = new Fields();
                     field.Id = Convert.ToInt32(fieldsTable.Rows[0]["Id"]);
                     field.NoteName = Convert.ToString(fieldsTable.Rows[0]["NoteName"]);
-                    field.Note = Convert.ToString(fieldsTable.Rows[0]["Note"]);
+                    field.Note = Convert.ToInt32(fieldsTable.Rows[0]["Note"]);
                     field.FormId = Convert.ToInt32(fieldsTable.Rows[0]["FormId"]);
                 }
             }
@@ -194,12 +194,11 @@ namespace DatabaseConfigurations.Repositories
                         Fields field = new Fields();
                         field.Id = Convert.ToInt32(fieldsTable.Rows[i]["Id"]);
                         field.NoteName = Convert.ToString(fieldsTable.Rows[i]["NoteName"]);
-                        field.Note = fieldsTable.Rows[i]["Note"].ToString();
                         try
                         {
                             if (IsNumeric(fieldsTable.Rows[i]["Note"].ToString()))
                             {
-                                field.Note = fieldsTable.Rows[i]["Note"].ToString();
+                                field.Note = Convert.ToInt32(fieldsTable.Rows[i]["Note"]);
                             }
                         }
                         catch (Exception ex)
