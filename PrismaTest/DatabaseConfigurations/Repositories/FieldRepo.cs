@@ -168,7 +168,6 @@ namespace DatabaseConfigurations.Repositories
         public List<Fields>? GetByFormId(int ID)
         {
             List<Fields>? formFields = null;
-
             using (var connection = new SqlConnection(_configuration.GetConnectionString("SQLConnection")))
             {
                 try
@@ -190,13 +189,16 @@ namespace DatabaseConfigurations.Repositories
 
                 if (fieldsTable.Rows.Count > 0)
                 {
-                    Fields field = new Fields();
-                    field.Id = Convert.ToInt32(fieldsTable.Rows[0]["Id"]);
-                    field.NoteName = Convert.ToString(fieldsTable.Rows[0]["NoteName"]);
-                    field.Note = Convert.ToString(fieldsTable.Rows[0]["Note"]);
-                    field.FormId = Convert.ToInt32(fieldsTable.Rows[0]["FormId"]);
+                    for (int i = 0; i < fieldsTable.Rows.Count; i++)
+                    {
+                        Fields field = new Fields();
+                        field.Id = Convert.ToInt32(fieldsTable.Rows[0]["Id"]);
+                        field.NoteName = Convert.ToString(fieldsTable.Rows[0]["NoteName"]);
+                        field.Note = Convert.ToString(fieldsTable.Rows[0]["Note"]);
+                        field.FormId = Convert.ToInt32(fieldsTable.Rows[0]["FormId"]);
 
-                    formFields.Add(field);
+                        formFields.Add(field);
+                    }
                 }
                 
             }

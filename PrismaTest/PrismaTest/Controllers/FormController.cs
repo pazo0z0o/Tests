@@ -10,14 +10,12 @@ namespace PrismaTest.Controllers
     [ApiController]
     public class FormController : ControllerBase
     {
-
-        private readonly IConfiguration _configuration;
         private readonly IEntityRepo<Forms> _formsRepo;
         //injection
-        public FormController(IConfiguration configuration, IEntityRepo<Forms> form)
+        public FormController( IEntityRepo<Forms> form)
         {
             _formsRepo = form;
-            _configuration = configuration;
+           
         }
 
         [HttpGet]
