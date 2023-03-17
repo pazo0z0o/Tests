@@ -24,7 +24,7 @@ namespace PrismaTest.Controllers
 
         // GET fields/id
         [HttpGet("/fields/{id:int}")]
-        public async Task<ActionResult<List<Fields>>> Get(int formid)
+        public async Task<ActionResult<List<Fields>>> GetByIdAsync(int formid)
         {
             try
             {//it should take the Id of the form that those fields belong to

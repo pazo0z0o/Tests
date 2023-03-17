@@ -37,9 +37,18 @@ namespace DatabaseConfigurations.Repositories
                     "Values(@NoteName, @Note, @FormId)", connection);
 
                 command.Parameters.AddWithValue("@NoteName", entity.NoteName);
-                command.Parameters.AddWithValue("@Note", entity.Note);
                 command.Parameters.AddWithValue("@FormId", formId);
-
+                try
+                {
+                    if (IsNumeric(entity.Note.ToString()))
+                    {
+                        command.Parameters.AddWithValue("@Note", entity.Note);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
                 command.ExecuteNonQuery(); // number of rows affected should be 1
             }
         }
@@ -97,8 +106,8 @@ namespace DatabaseConfigurations.Repositories
                         Fields field = new Fields();
                         field.Id = Convert.ToInt32(fieldsTable.Rows[i]["Id"]);
                         field.NoteName = Convert.ToString(fieldsTable.Rows[i]["NoteName"]);
-                        field.Note = Convert.ToInt32(fieldsTable.Rows[i]["Note"]);
                         field.FormId = Convert.ToInt32(fieldsTable.Rows[i]["FormId"]);
+                        field.Note = Convert.ToInt32(fieldsTable.Rows[i]["Note"]);
 
                         fieldsList.Add(field);
                     }
@@ -194,30 +203,14 @@ namespace DatabaseConfigurations.Repositories
                         Fields field = new Fields();
                         field.Id = Convert.ToInt32(fieldsTable.Rows[i]["Id"]);
                         field.NoteName = Convert.ToString(fieldsTable.Rows[i]["NoteName"]);
-                        try
-                        {
-                            if (IsNumeric(fieldsTable.Rows[i]["Note"].ToString()))
-                            {
-                                field.Note = Convert.ToInt32(fieldsTable.Rows[i]["Note"]);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            throw ex;
-                        }
-
-
-                        
+                        field.Note = Convert.ToInt32(fieldsTable.Rows[i]["Note"]);
                         field.FormId = Convert.ToInt32(fieldsTable.Rows[i]["FormId"]);
-
                         formFields.Add(field);
                     }
                 }
-
             }
             return formFields;
         }
-
         //Validator for numeric
         public bool IsNumeric(string noteValue)
         {
